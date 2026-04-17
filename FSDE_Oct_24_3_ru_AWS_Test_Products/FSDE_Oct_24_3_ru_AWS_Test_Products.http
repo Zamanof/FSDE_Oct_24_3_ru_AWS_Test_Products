@@ -1,0 +1,6 @@
+@FSDE_Oct_24_3_ru_AWS_Test_Products_HostAddress = http://localhost:5262
+
+GET {{FSDE_Oct_24_3_ru_AWS_Test_Products_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
