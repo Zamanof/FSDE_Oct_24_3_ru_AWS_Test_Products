@@ -62,6 +62,29 @@ function ProductForm({
                         maxLength={100}
                     />
                 </div>
+                <div className="row">
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label">Discount Start</label>
+                        <input
+                            type="datetime-local"
+                            name="discountStart"
+                            className="form-control"
+                            value={form.discountStart}
+                            onChange={onChange}
+                        />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label">Discount End</label>
+                        <input
+                            type="datetime-local"
+                            name="discountEnd"
+                            className="form-control"
+                            value={form.discountEnd}
+                            onChange={onChange}
+                        />
+                    </div>
+                </div>
+
             </div>
 
             <div className="mb-3">

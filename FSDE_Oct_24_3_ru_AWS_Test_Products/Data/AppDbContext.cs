@@ -19,9 +19,13 @@ public class AppDbContext : DbContext
             {
                 entity.HasKey(p => p.Id);
                 entity.Property(p => p.Price).HasColumnType("decimal(10, 2)");
-            }
-            
-            );
+            });
+        modelBuilder.Entity<Product>()
+            .Property(p=> p.IsDiscountActive).HasDefaultValue(false);
+
+        modelBuilder.Entity<Product>()
+            .HasIndex(p => new { p.IsDiscountActive , p.DiscountStart, p.DiscountEnd})
+            .HasDatabaseName("Products_IsDiscount_DiscountStart_DiscountEnd");
         modelBuilder.Entity<Product>().HasData(
 
     new Product

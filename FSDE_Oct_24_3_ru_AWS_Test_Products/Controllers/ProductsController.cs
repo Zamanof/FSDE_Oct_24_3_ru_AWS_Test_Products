@@ -46,13 +46,18 @@ public class ProductsController : ControllerBase
         if(!ModelState.IsValid)
             return BadRequest(ModelState);
 
+        ValidateDiscountDates(dto.DiscountStart, dto.DiscountEnd);
+
         var product = new Product
         {
             Name = dto.Name,
             Category = dto.Category,
             Price = dto.Price,
             Description = dto.Description,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            DiscountStart = dto.DiscountStart,
+            DiscountEnd = dto.DiscountEnd,
+            IsDiscountActive = false
         };
         if (dto.Image != null)
         {
@@ -72,6 +77,8 @@ public class ProductsController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
+        ValidateDiscountDates(dto.DiscountStart, dto.DiscountEnd);
+
         var product = await _context.Products.FindAsync(id);
         if (product == null)
             return NotFound("Product not found");
@@ -80,6 +87,10 @@ public class ProductsController : ControllerBase
         product.Category = dto.Category;
         product.Price = dto.Price;
         product.Description = dto.Description;
+        product.DiscountStart = dto.DiscountStart;
+        product.DiscountEnd = dto.DiscountEnd;
+        product.IsDiscountActive = false;
+
         if (dto.Image != null)
         {
             if (!string.IsNullOrEmpty(product.ImageUrl))
@@ -120,7 +131,23 @@ public class ProductsController : ControllerBase
             Price = p.Price,
             Description = p.Description,
             ImageUrl = p.ImageUrl,
-            CreatedAt = p.CreatedAt
+            CreatedAt = p.CreatedAt,
+            DiscountStart = p.DiscountStart,
+            DiscountEnd = p.DiscountEnd,
+            IsDiscountActive = p.IsDiscountActive       
         };
+    }
+
+    private void ValidateDiscountDates(DateTime? discountStart, DateTime? discountEnd)
+    {
+        if (discountStart.HasValue && discountEnd.HasValue && discountStart.Value > discountEnd.Value)
+        {
+                ModelState.AddModelError("DiscountRange", "DiscountStart must be less to DiscountEnd");
+        }
+
+        if(discountStart.HasValue != discountEnd.HasValue)
+        {
+            ModelState.AddModelError("DiscountRange", "Both DiscountStart and DiscountEnd must be provided together");
+        }
     }
 }

@@ -14,7 +14,6 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<AppDbContext>(
     options
     => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IStorageService, S3StorageService>();
@@ -42,7 +41,7 @@ builder.Services.AddCors(
 {
     options.AddPolicy("ReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins("http://mogudaproducts.s3-website.eu-north-1.amazonaws.com", "http://localhost:5173")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -60,8 +59,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("ReactApp");
 
+
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();

@@ -38,6 +38,10 @@ function ProductDetails() {
         return <div className="alert alert-warning">Product not found.</div>;
     }
 
+    const discountWindow = product.discountStart && product.discountEnd
+    ?`${new Date(product.discountStart).toLocaleDateString()} - ${product.discountEnd}`
+    :"Not Configured";
+
     return (
         <div className="card shadow-sm p-4">
             <img
@@ -56,6 +60,20 @@ function ProductDetails() {
                 <strong>Created:</strong> {new Date(product.createdAt).toLocaleString()}
             </p>
             <p className="mb-3">{product.description}</p>
+            <p className="mb-2">
+                <strong>Discount Window: </strong> {discountWindow}
+            </p>
+            <p className="mb-3">
+                <strong>Discount:</strong>{"  "}
+                {product.isDiscountActive ? (<span className="badge text-bg-success">
+                                        Active
+                                    </span>)
+                    :
+                    (<span className="badge text-bg-secondary">
+                                        InActive
+                                    </span>)
+                }
+            </p>
 
             <div className="d-flex gap-2">
                 <Link to={`/products/edit/${product.id}`} className="btn btn-primary">

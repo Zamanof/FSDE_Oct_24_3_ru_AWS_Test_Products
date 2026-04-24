@@ -11,7 +11,9 @@ function ProductEdit() {
         name: "",
         description: "",
         price: "",
-        category: ""
+        category: "",
+        discountStart:"",
+        discountEnd:"",
     });
     const [imageFile, setImageFile] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -29,7 +31,9 @@ function ProductEdit() {
                     name: p.name || "",
                     description: p.description || "",
                     price: p.price || "",
-                    category: p.category || ""
+                    category: p.category || "",
+                    discountStart: p.discountStart || "",
+                    discountEnd: p.discountEnd||"",
                 });
             } catch {
                 setError("Failed to load product.");
@@ -53,12 +57,23 @@ function ProductEdit() {
         e.preventDefault();
         setLoading(true);
         setError("");
+        if((form.discountStart && !form.discountEnd) || (form.discountEnd && !form.discountStart)) {
+            setError("Set both discount dates or leave both empty");
+            setLoading(false);
+            return;
+        }
+        if(form.discountEnd && form.discountEnd && form.discountStart > form.discountEnd) {
+            setError("Discount start must be before one discount");
+        }
         try {
             const formData = new FormData();
             formData.append("name", form.name);
             formData.append("description", form.description);
             formData.append("price", form.price);
             formData.append("category", form.category);
+            formData.append("discountStart",
+                new Date(form.discountStart).toISOString());
+            formData.append("discountEnd", new Date(form.discountEnd).toISOString());
             if (imageFile) {
                 formData.append("image", imageFile);
             }

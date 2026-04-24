@@ -7,7 +7,9 @@ const initialForm = {
     name: "",
     description: "",
     price: "",
-    category: ""
+    category: "",
+    discountStart:"",
+    discountEnd:"",
 };
 
 function ProductCreate() {
@@ -29,12 +31,26 @@ function ProductCreate() {
         e.preventDefault();
         setLoading(true);
         setError("");
+
+        if((form.discountStart && !form.discountEnd) || (form.discountEnd && !form.discountStart)) {
+            setError("Set both discount dates or leave both empty");
+            setLoading(false);
+            return;
+        }
+        if(form.discountEnd && form.discountEnd && form.discountStart > form.discountEnd) {
+            setError("Discount start must be before one discount");
+        }
+
         try {
             const formData = new FormData();
             formData.append("name", form.name);
             formData.append("description", form.description);
             formData.append("price", form.price);
             formData.append("category", form.category);
+            formData.append("discountStart",
+                new Date(form.discountStart).toISOString());
+            formData.append("discountEnd", new Date(form.discountEnd).toISOString());
+
             if (imageFile) {
                 formData.append("image", imageFile);
             }
